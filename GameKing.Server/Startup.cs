@@ -54,10 +54,7 @@ namespace GameKing.Server
             {
                 endpoints.MapMagicOnionService();
 
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
             });
 
             RedisServer.Init();

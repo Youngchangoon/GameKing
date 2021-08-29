@@ -14,7 +14,7 @@ namespace GameKing.Unity.NinjaKid.Map
 
         private MarkModel[] _markModels;
         private MarkView[] _markViews;
-        
+
         public void Initialize()
         {
             _markViews = new[] { _playerMark0, _playerMark1 };
@@ -23,7 +23,7 @@ namespace GameKing.Unity.NinjaKid.Map
             for (var i = 0; i < _markViews.Length; ++i)
                 _markViews[i].Init(i, _mapView.transform.Find("MarkRoot"));
         }
-        
+
         /// <summary>
         /// 말의 위치를 설정한다.
         /// </summary>
@@ -32,7 +32,7 @@ namespace GameKing.Unity.NinjaKid.Map
         public void SetMarkPos(MarkModel markModel, int playerIndex)
         {
             var mapPosition = _mapService.GetMapPosition(markModel.x, markModel.y);
-            
+
             _markViews[playerIndex].SetPosition(mapPosition);
             _markModels[playerIndex] = markModel;
         }
@@ -54,9 +54,9 @@ namespace GameKing.Unity.NinjaKid.Map
             for (var i = 0; i < _markModels.Length; ++i)
             {
                 var curModel = _markModels[i];
-                if (curModel.x != x || curModel.y != y) 
+                if (curModel.x != x || curModel.y != y)
                     continue;
-                
+
                 curModel.hp -= damage;
                 _markViews[i].SetHp(curModel.hp, 100);
             }

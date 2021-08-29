@@ -17,7 +17,7 @@ namespace GameKing.Unity.NinjaKid.Map
         public void Init(Vector2Int cellPos)
         {
             _cellPos = cellPos;
-            
+
             UpdateCellCanSelect(false);
         }
 
@@ -35,10 +35,10 @@ namespace GameKing.Unity.NinjaKid.Map
                 doorTrsArr[i].DOScaleX(isOpen ? 0f : 1f, 0.2f);
             }
         }
-        
+
         public void OnPressedCellButton()
         {
-            MessageBroker.Default.Publish(new SelectCellEvent{Pos = _cellPos});
+            MessageBroker.Default.Publish(new SelectCellEvent { Pos = _cellPos });
         }
     }
 }

@@ -7,7 +7,7 @@ namespace GameKing.Server
     {
         private MessagePackSerializerOptions Options { get; }
 
-        public MessagePackConverter(MessagePackSerializerOptions options) 
+        public MessagePackConverter(MessagePackSerializerOptions options)
             => Options = options;
 
         public byte[] Serialize<T>(T value)

@@ -9,7 +9,7 @@ namespace GameKing.Unity.NinjaKid
     public class NinjaKidGameInstaller : MonoInstaller
     {
         [SerializeField] private MarkView markPrefab;
-        
+
         public override void InstallBindings()
         {
             MainThreadDispatcher.Initialize();
@@ -23,7 +23,7 @@ namespace GameKing.Unity.NinjaKid
             Container.Bind<MarkView>().WithId("Mark1").FromComponentInNewPrefab(markPrefab).AsTransient();
 
             Container.Bind<InGameScreen>().FromInstance(FindObjectOfType<InGameScreen>());
-            
+
             SignalBusInstaller.Install(Container);
         }
     }

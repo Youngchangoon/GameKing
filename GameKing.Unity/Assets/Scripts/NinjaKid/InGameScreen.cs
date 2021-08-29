@@ -17,7 +17,7 @@ namespace GameKing.Unity.NinjaKid
     public class InGameScreen : MonoBehaviour
     {
         [Inject] private NinjaKidServerService _serverService;
-        
+
         [SerializeField] private Button attackButton;
         [SerializeField] private Button moveButton;
         [SerializeField] private GameResultPopup resultPopup;

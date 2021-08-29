@@ -150,7 +150,7 @@ namespace GameKing.Unity.NinjaKid
                     _mapService.UpdateMapState(MapState.SelectPos);
                     break;
                 case GameState.GameEnd:
-                    _inGameScreen.ShowResult(gameEndType, _myPlayerIndex == (int)gameEndType -1);
+                    _inGameScreen.ShowResult(gameEndType, _myPlayerIndex == (int)gameEndType - 1);
                     break;
             }
         }

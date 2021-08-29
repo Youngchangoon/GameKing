@@ -18,7 +18,7 @@ namespace GameKing.Shared.Hubs
         /// </summary>
         /// <returns></returns>
         Task LeaveAsync();
-        
+
         /// <summary>
         /// 플레이어어 위치를 보낸다.
         /// </summary>
@@ -36,7 +36,7 @@ namespace GameKing.Shared.Hubs
         /// <param name="y"></param>
         /// <returns></returns>
         Task AttackPosAsync(int playerIndex, int x, int y);
-        
+
         /// <summary>
         /// 움직일 위치를 보낸다.
         /// </summary>

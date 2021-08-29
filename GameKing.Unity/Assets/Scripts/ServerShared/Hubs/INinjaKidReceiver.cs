@@ -12,7 +12,7 @@ namespace GameKing.Shared.Hubs
         void OnJoin(string userName);
 
         void OnLeave(string leaveUerName);
-        
+
         /// <summary>
         /// 게임 시작
         /// </summary>
@@ -36,7 +36,7 @@ namespace GameKing.Shared.Hubs
         void OnStartTurn(int curTurnPlayerIndex);
 
         void OnAttackedCell(int damage, int x, int y);
-        
+
         void OnMovedCell(MarkModel[] markModels);
     }
 }

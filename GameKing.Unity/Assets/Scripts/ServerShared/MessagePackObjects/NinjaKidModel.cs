@@ -12,7 +12,7 @@ namespace GameKing.Shared.MessagePackObjects
         [Key(2)] public int CurTurnPlayerIndex { get; set; }
         [Key(4)] public bool IsMoved { get; set; }
         [Key(5)] public bool IsAttacked { get; set; }
-        
+
 
         public NinjaKidModel(MapModel map)
         {
@@ -23,8 +23,8 @@ namespace GameKing.Shared.MessagePackObjects
 
             MarkModels = new MarkModel[2]
             {
-                new MarkModel() { x = -1, y = -1, hp = 100, damage = 100},
-                new MarkModel() { x = -1, y = -1, hp = 100, damage = 100},
+                new MarkModel() { x = -1, y = -1, hp = 100, damage = 100 },
+                new MarkModel() { x = -1, y = -1, hp = 100, damage = 100 },
             };
         }
 
@@ -52,15 +52,15 @@ namespace GameKing.Shared.MessagePackObjects
         public int Attack(int attackerIndex, int x, int y)
         {
             OpenCell(x, y);
-            
+
             var damage = MarkModels[attackerIndex].damage;
 
             for (var i = 0; i < MarkModels.Length; ++i)
             {
                 var curModel = MarkModels[i];
-                if (curModel.x != x || curModel.y != y) 
+                if (curModel.x != x || curModel.y != y)
                     continue;
-                
+
                 curModel.hp -= damage;
                 curModel.hp = Math.Max(0, curModel.hp);
             }
@@ -68,7 +68,7 @@ namespace GameKing.Shared.MessagePackObjects
             IsAttacked = true;
             return damage;
         }
-        
+
         public void Move(int playerIndex, int x, int y)
         {
             var markModel = MarkModels[playerIndex];
@@ -86,7 +86,7 @@ namespace GameKing.Shared.MessagePackObjects
 
             return -1;
         }
-        
+
         public int SetNextPlayerIndex()
         {
             CurTurnPlayerIndex = ++CurTurnPlayerIndex >= 2 ? 0 : CurTurnPlayerIndex;
@@ -120,7 +120,7 @@ namespace GameKing.Shared.MessagePackObjects
 
             if (MarkModels[0].hp <= 0)
                 player0Dead = true;
-            
+
             if (MarkModels[1].hp <= 0)
                 player1Dead = true;
 

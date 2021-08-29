@@ -27,8 +27,8 @@ namespace GameKing.Server
         public async Task<int> JoinAsync(JoinRequest request)
         {
             //Test
-            Console.WriteLine("REQ~~: " + request.RoomName+ ", name: " + request.UserName);
-            
+            Console.WriteLine("REQ~~: " + request.RoomName + ", name: " + request.UserName);
+
             // 유저 추가
             _room = await Group.AddAsync(request.RoomName);
             _userName = request.UserName;
@@ -47,15 +47,15 @@ namespace GameKing.Server
             {
                 await _gameModelRedis.SetAsync(new NinjaKidModel(NinjaKidGameLogic.GenerateMapModel(5)));
                 var gameModel = await _gameModelRedis.GetAsync();
-                
+
                 Broadcast(_room).OnGameStart(gameModel.Value);
                 Broadcast(_room).OnGameState(GameState.SelectMarkPos);
             }
 
             return _playerIndex;
         }
-        
-        
+
+
         /// <summary>
         /// 유저가 퇴장할때 들어오는 함수
         /// </summary>
@@ -92,10 +92,10 @@ namespace GameKing.Server
         public async Task AttackPosAsync(int playerIndex, int x, int y)
         {
             Console.WriteLine($"Attacker Index: {playerIndex}, x: {x}, y: {y}");
-            
+
             var gameModel = await _gameModelRedis.GetAsync();
             var damage = gameModel.Value.Attack(playerIndex, x, y);
-            
+
             var nextTurnIndex = gameModel.Value.CheckTurnEnd();
             var isNextTurn = nextTurnIndex != -1;
             var gameEndType = gameModel.Value.GetGameEndState();
@@ -117,15 +117,13 @@ namespace GameKing.Server
 
             var nextTurnIndex = gameModel.Value.CheckTurnEnd();
             var isNextTurn = nextTurnIndex != -1;
-            
+
             await _gameModelRedis.SetAsync(gameModel.Value);
-            
+
             Broadcast(_room).OnMovedCell(gameModel.Value.MarkModels);
-            
-            if(isNextTurn)
+
+            if (isNextTurn)
                 Broadcast(_room).OnStartTurn(nextTurnIndex);
         }
-        
-        
     }
 }

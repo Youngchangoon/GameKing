@@ -12,7 +12,7 @@ namespace GameKing.Unity.NinjaKid.Map
     {
         [Inject] private NinjaKidServerService _ninjaKidServerService;
         [Inject] private MarkService _markService;
-        
+
         [Inject] private MapView _mapView;
 
         private MapModel _mapModel;
@@ -34,7 +34,7 @@ namespace GameKing.Unity.NinjaKid.Map
                         _ninjaKidServerService.MovePosAsync(e.Pos.x, e.Pos.y).Forget();
                         break;
                 }
-                
+
                 UpdateMapState(MapState.None);
             });
 
