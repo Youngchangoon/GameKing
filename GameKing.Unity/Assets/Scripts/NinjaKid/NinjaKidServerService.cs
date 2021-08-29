@@ -141,13 +141,16 @@ namespace GameKing.Unity.NinjaKid
             _mapService.GenerateMapObjects(ninjaKidModel.MapModel);
         }
 
-        public void OnGameState(GameState gameState)
+        public void OnGameState(GameState gameState, GameEndType gameEndType)
         {
             Debug.Log("GAME STATE!!: " + gameState);
             switch (gameState)
             {
                 case GameState.SelectMarkPos:
                     _mapService.UpdateMapState(MapState.SelectPos);
+                    break;
+                case GameState.GameEnd:
+                    _inGameScreen.ShowResult(gameEndType, _myPlayerIndex == (int)gameEndType -1);
                     break;
             }
         }

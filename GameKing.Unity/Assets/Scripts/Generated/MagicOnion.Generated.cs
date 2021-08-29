@@ -81,11 +81,13 @@ namespace MagicOnion.Resolvers
 
         static MagicOnionResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(3)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(5)
             {
                 {typeof(global::GameKing.Shared.MessagePackObjects.MarkModel[]), 0 },
-                {typeof(global::MagicOnion.DynamicArgumentTuple<int, int, int>), 1 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.GameState), 2 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>), 1 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<int, int, int>), 2 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.GameEndType), 3 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.GameState), 4 },
             };
         }
 
@@ -100,8 +102,10 @@ namespace MagicOnion.Resolvers
             switch (key)
             {
                 case 0: return new global::MessagePack.Formatters.ArrayFormatter<global::GameKing.Shared.MessagePackObjects.MarkModel>();
-                case 1: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, int, int>(default(int), default(int), default(int));
-                case 2: return new MagicOnion.Formatters.GameStateFormatter();
+                case 1: return new global::MagicOnion.DynamicArgumentTupleFormatter<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>(default(global::GameKing.Shared.MessagePackObjects.GameState), default(global::GameKing.Shared.MessagePackObjects.GameEndType));
+                case 2: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, int, int>(default(int), default(int), default(int));
+                case 3: return new MagicOnion.Formatters.GameEndTypeFormatter();
+                case 4: return new MagicOnion.Formatters.GameStateFormatter();
                 default: return null;
             }
         }
@@ -123,6 +127,19 @@ namespace MagicOnion.Formatters
 {
     using System;
     using MessagePack;
+
+    public sealed class GameEndTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GameKing.Shared.MessagePackObjects.GameEndType>
+    {
+        public void Serialize(ref MessagePackWriter writer, global::GameKing.Shared.MessagePackObjects.GameEndType value, MessagePackSerializerOptions options)
+        {
+            writer.Write((Int32)value);
+        }
+        
+        public global::GameKing.Shared.MessagePackObjects.GameEndType Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        {
+            return (global::GameKing.Shared.MessagePackObjects.GameEndType)reader.ReadInt32();
+        }
+    }
 
     public sealed class GameStateFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GameKing.Shared.MessagePackObjects.GameState>
     {
@@ -300,8 +317,8 @@ namespace GameKing.Shared.Hubs {
                 }
                 case 1008177111: // OnGameState
                 {
-                    var result = MessagePackSerializer.Deserialize<global::GameKing.Shared.MessagePackObjects.GameState>(data, serializerOptions);
-                    receiver.OnGameState(result); break;
+                    var result = MessagePackSerializer.Deserialize<DynamicArgumentTuple<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>>(data, serializerOptions);
+                    receiver.OnGameState(result.Item1, result.Item2); break;
                 }
                 case 453572128: // OnPlacedMark
                 {

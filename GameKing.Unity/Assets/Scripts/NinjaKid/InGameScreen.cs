@@ -1,4 +1,5 @@
-﻿using GameKing.Unity.NinjaKid.Messages;
+﻿using GameKing.Shared.MessagePackObjects;
+using GameKing.Unity.NinjaKid.Messages;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,9 +17,10 @@ namespace GameKing.Unity.NinjaKid
     public class InGameScreen : MonoBehaviour
     {
         [Inject] private NinjaKidServerService _serverService;
-
+        
         [SerializeField] private Button attackButton;
         [SerializeField] private Button moveButton;
+        [SerializeField] private GameResultPopup resultPopup;
 
         public void SetEnableAllButton(bool enable)
         {
@@ -37,6 +39,11 @@ namespace GameKing.Unity.NinjaKid
                     attackButton.interactable = enable;
                     break;
             }
+        }
+
+        public void ShowResult(GameEndType gameEndType, bool isPlayerWin)
+        {
+            resultPopup.Init(gameEndType, isPlayerWin);
         }
 
         public void OnPressedAttackButton()

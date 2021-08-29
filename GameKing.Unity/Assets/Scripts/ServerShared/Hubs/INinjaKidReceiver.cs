@@ -21,8 +21,8 @@ namespace GameKing.Shared.Hubs
         /// <summary>
         /// 게임 상태 Updated
         /// </summary>
-        void OnGameState(GameState gameState);
-        
+        void OnGameState(GameState gameState, GameEndType gameEndType = GameEndType.None);
+
         /// <summary>
         /// 모든 말이 놓여졌을때
         /// </summary>

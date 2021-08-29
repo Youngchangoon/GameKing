@@ -98,12 +98,15 @@ namespace GameKing.Server
             
             var nextTurnIndex = gameModel.Value.CheckTurnEnd();
             var isNextTurn = nextTurnIndex != -1;
+            var gameEndType = gameModel.Value.GetGameEndState();
 
             await _gameModelRedis.SetAsync(gameModel.Value);
 
             Broadcast(_room).OnAttackedCell(damage, x, y);
-            
-            if(isNextTurn)
+
+            if (gameEndType != GameEndType.None)
+                Broadcast(_room).OnGameState(GameState.GameEnd, gameEndType);
+            else if (isNextTurn)
                 Broadcast(_room).OnStartTurn(nextTurnIndex);
         }
 
