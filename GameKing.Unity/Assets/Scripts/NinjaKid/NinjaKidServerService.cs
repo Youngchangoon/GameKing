@@ -160,8 +160,7 @@ namespace GameKing.Unity.NinjaKid
             for (var playerIndex = 0; playerIndex < markModels.Length; playerIndex++)
             {
                 var markModel = markModels[playerIndex];
-                Debug.Log("MARK POS: " + markModel.x + ", " + markModel.y);
-                _markService.SetMarkPos(markModel, playerIndex);
+                _markService.SetMarkPos(markModel, playerIndex, _myPlayerIndex == playerIndex);
             }
         }
 
@@ -190,7 +189,7 @@ namespace GameKing.Unity.NinjaKid
         public void OnMovedCell(MarkModel[] markModels)
         {
             for (var i = 0; i < markModels.Length; ++i)
-                _markService.SetMarkPos(markModels[i], i);
+                _markService.SetMarkPos(markModels[i], i, _myPlayerIndex == i);
         }
     }
 }

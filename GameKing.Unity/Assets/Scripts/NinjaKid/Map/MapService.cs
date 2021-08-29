@@ -66,6 +66,16 @@ namespace GameKing.Unity.NinjaKid.Map
             _mapView.SetOpen(x, y, isOpen);
         }
 
+        public void SetCelAlphaAll(float alpha)
+        {
+            _mapView.SetCellAlphaAll(alpha);
+        }
+
+        public void SetCellAlpha(int x, int y, float alpha)
+        {
+            _mapView.SetCellAlpha(x, y, alpha);
+        }
+
         public void UpdateMapState(MapState mapState)
         {
             _curMapState = mapState;

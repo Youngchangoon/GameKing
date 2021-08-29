@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canSelectMark: {fileID: 6683095907625206464}
+  doorGroup: {fileID: 5139287721111571913}
   cellButton: {fileID: 8774120097486772787}
   doorTrsArr:
   - {fileID: 2395677135851861509}
@@ -366,7 +367,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2304062803400145491
 RectTransform:
   m_ObjectHideFlags: 0

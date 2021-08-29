@@ -9,6 +9,7 @@ namespace GameKing.Unity.NinjaKid.Map
     public class CellView : MonoBehaviour
     {
         [SerializeField] private Image canSelectMark;
+        [SerializeField] private CanvasGroup doorGroup;
         [SerializeField] private Button cellButton;
         [SerializeField] private RectTransform[] doorTrsArr;
 
@@ -39,6 +40,11 @@ namespace GameKing.Unity.NinjaKid.Map
         public void OnPressedCellButton()
         {
             MessageBroker.Default.Publish(new SelectCellEvent { Pos = _cellPos });
+        }
+
+        public void SetCellAlpha(float alpha)
+        {
+            doorGroup.alpha = alpha;
         }
     }
 }

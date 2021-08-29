@@ -29,12 +29,19 @@ namespace GameKing.Unity.NinjaKid.Map
         /// </summary>
         /// <param name="markModel"></param>
         /// <param name="playerIndex"></param>
-        public void SetMarkPos(MarkModel markModel, int playerIndex)
+        /// <param name="isMe"></param>
+        public void SetMarkPos(MarkModel markModel, int playerIndex, bool isMe)
         {
             var mapPosition = _mapService.GetMapPosition(markModel.x, markModel.y);
 
             _markViews[playerIndex].SetPosition(mapPosition);
             _markModels[playerIndex] = markModel;
+
+            if (isMe)
+            {
+                _mapService.SetCelAlphaAll(1);
+                _mapService.SetCellAlpha(markModel.x, markModel.y, 0.5f);
+            }
         }
 
         /// <summary>

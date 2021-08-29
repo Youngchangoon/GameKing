@@ -98,5 +98,21 @@ namespace GameKing.Unity.NinjaKid.Map
         {
             return _cellArray[y][x].transform.position;
         }
+
+        public void SetCellAlpha(int x, int y, float alpha)
+        {
+            _cellArray[y][x].SetCellAlpha(alpha);
+        }
+
+        public void SetCellAlphaAll(float alpha)
+        {
+            for (var y = 0; y < _cellArray.Count; ++y)
+            {
+                for (var x = 0; x < _cellArray[y].Count; ++x)
+                {
+                    SetCellAlpha(x, y, alpha);
+                }
+            }
+        }
     }
 }
