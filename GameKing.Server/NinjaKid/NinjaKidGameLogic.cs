@@ -14,7 +14,11 @@ namespace GameKing.Server
             {
                 var addCellModelList = new List<CellModel>();
                 for (var x = 0; x < size; ++x)
-                    addCellModelList.Add(new CellModel());
+                    addCellModelList.Add(new CellModel
+                    {
+                        IsOpen = false,
+                        ItemModel = new ItemModel { ItemType = ItemType.None, }
+                    });
 
                 mapModel.list.Add(addCellModelList);
             }

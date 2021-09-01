@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GameKing.Shared.MessagePackObjects;
 using GameKing.Unity.NinjaKid.Messages;
+using GameKing.Unity.Utils;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,14 +21,20 @@ namespace GameKing.Unity.NinjaKid.Map
     {
         [SerializeField] private RectTransform cellRoot;
         [SerializeField] private CellView cellViewPrefab;
+        
+        [SerializeField] private RectTransform itemRoot;
+        [SerializeField] private ItemView itemViewPrefab;
+        
 
         public MapState CurMapState { get; private set; }
 
         private List<List<CellView>> _cellArray;
+        private ObjectPool<ItemView> _itemViewPool;
 
         public void Initialize()
         {
             _cellArray = new List<List<CellView>>();
+            _itemViewPool = new ObjectPool<ItemView>(itemViewPrefab, "ItemView", itemRoot, 25, 5);
             CurMapState = MapState.None;
         }
 
@@ -113,6 +120,14 @@ namespace GameKing.Unity.NinjaKid.Map
                     SetCellAlpha(x, y, alpha);
                 }
             }
+        }
+
+        public void AddItemInMap(ItemPlacedInfo itemPlacedInfo)
+        {
+            var newItemView = _itemViewPool.Pop();
+            var cellLocalPos = _cellArray[itemPlacedInfo.y][itemPlacedInfo.x].transform.localPosition;
+
+            newItemView.Init(cellLocalPos, itemPlacedInfo.itemType);
         }
     }
 }

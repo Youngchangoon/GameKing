@@ -95,9 +95,20 @@ namespace GameKing.Unity.NinjaKid.Map
             }
         }
 
+        public void CheckAllGetItem()
+        {
+            // _markService
+            // _mapView.CheckAllGetItem()
+        }
+
         public Vector2 GetMapPosition(int x, int y)
         {
             return _mapView.GetPosition(x, y);
+        }
+
+        public void AddItem(ItemPlacedInfo itemsPlacedInfo)
+        {
+            _mapView.AddItemInMap(itemsPlacedInfo);
         }
     }
 }

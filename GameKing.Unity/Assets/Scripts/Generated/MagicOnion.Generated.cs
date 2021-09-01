@@ -81,13 +81,16 @@ namespace MagicOnion.Resolvers
 
         static MagicOnionResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(5)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(8)
             {
                 {typeof(global::GameKing.Shared.MessagePackObjects.MarkModel[]), 0 },
-                {typeof(global::MagicOnion.DynamicArgumentTuple<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>), 1 },
-                {typeof(global::MagicOnion.DynamicArgumentTuple<int, int, int>), 2 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.GameEndType), 3 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.GameState), 4 },
+                {typeof(global::ItemPlacedInfo[]), 1 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>), 2 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>), 3 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<int, int, int>), 4 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.GameEndType), 5 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.GameState), 6 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.ItemType), 7 },
             };
         }
 
@@ -102,10 +105,13 @@ namespace MagicOnion.Resolvers
             switch (key)
             {
                 case 0: return new global::MessagePack.Formatters.ArrayFormatter<global::GameKing.Shared.MessagePackObjects.MarkModel>();
-                case 1: return new global::MagicOnion.DynamicArgumentTupleFormatter<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>(default(global::GameKing.Shared.MessagePackObjects.GameState), default(global::GameKing.Shared.MessagePackObjects.GameEndType));
-                case 2: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, int, int>(default(int), default(int), default(int));
-                case 3: return new MagicOnion.Formatters.GameEndTypeFormatter();
-                case 4: return new MagicOnion.Formatters.GameStateFormatter();
+                case 1: return new global::MessagePack.Formatters.ArrayFormatter<global::ItemPlacedInfo>();
+                case 2: return new global::MagicOnion.DynamicArgumentTupleFormatter<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>(default(global::GameKing.Shared.MessagePackObjects.GameState), default(global::GameKing.Shared.MessagePackObjects.GameEndType));
+                case 3: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>(default(int), default(global::GameKing.Shared.MessagePackObjects.ItemType), default(int), default(int));
+                case 4: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, int, int>(default(int), default(int), default(int));
+                case 5: return new MagicOnion.Formatters.GameEndTypeFormatter();
+                case 6: return new MagicOnion.Formatters.GameStateFormatter();
+                case 7: return new MagicOnion.Formatters.ItemTypeFormatter();
                 default: return null;
             }
         }
@@ -151,6 +157,19 @@ namespace MagicOnion.Formatters
         public global::GameKing.Shared.MessagePackObjects.GameState Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
         {
             return (global::GameKing.Shared.MessagePackObjects.GameState)reader.ReadInt32();
+        }
+    }
+
+    public sealed class ItemTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GameKing.Shared.MessagePackObjects.ItemType>
+    {
+        public void Serialize(ref MessagePackWriter writer, global::GameKing.Shared.MessagePackObjects.ItemType value, MessagePackSerializerOptions options)
+        {
+            writer.Write((Int32)value);
+        }
+        
+        public global::GameKing.Shared.MessagePackObjects.ItemType Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        {
+            return (global::GameKing.Shared.MessagePackObjects.ItemType)reader.ReadInt32();
         }
     }
 
@@ -330,6 +349,11 @@ namespace GameKing.Shared.Hubs {
                     var result = MessagePackSerializer.Deserialize<int>(data, serializerOptions);
                     receiver.OnStartTurn(result); break;
                 }
+                case -221887130: // OnPlacedItem
+                {
+                    var result = MessagePackSerializer.Deserialize<global::ItemPlacedInfo[]>(data, serializerOptions);
+                    receiver.OnPlacedItem(result); break;
+                }
                 case -1796033523: // OnAttackedCell
                 {
                     var result = MessagePackSerializer.Deserialize<DynamicArgumentTuple<int, int, int>>(data, serializerOptions);
@@ -339,6 +363,11 @@ namespace GameKing.Shared.Hubs {
                 {
                     var result = MessagePackSerializer.Deserialize<global::GameKing.Shared.MessagePackObjects.MarkModel[]>(data, serializerOptions);
                     receiver.OnMovedCell(result); break;
+                }
+                case 1959756195: // OnGetItem
+                {
+                    var result = MessagePackSerializer.Deserialize<DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>>(data, serializerOptions);
+                    receiver.OnGetItem(result.Item1, result.Item2, result.Item3, result.Item4); break;
                 }
                 default:
                     break;
@@ -379,6 +408,12 @@ namespace GameKing.Shared.Hubs {
                     ((TaskCompletionSource<Nil>)taskCompletionSource).TrySetResult(result);
                     break;
                 }
+                case 893734420: // GetItemAsync
+                {
+                    var result = MessagePackSerializer.Deserialize<Nil>(data, serializerOptions);
+                    ((TaskCompletionSource<Nil>)taskCompletionSource).TrySetResult(result);
+                    break;
+                }
                 default:
                     break;
             }
@@ -407,6 +442,11 @@ namespace GameKing.Shared.Hubs {
         public global::System.Threading.Tasks.Task MovePosAsync(int playerIndex, int x, int y)
         {
             return WriteMessageWithResponseAsync<DynamicArgumentTuple<int, int, int>, Nil>(1146928034, new DynamicArgumentTuple<int, int, int>(playerIndex, x, y));
+        }
+
+        public global::System.Threading.Tasks.Task GetItemAsync(int playerIndex, global::GameKing.Shared.MessagePackObjects.ItemType itemType, int x, int y)
+        {
+            return WriteMessageWithResponseAsync<DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>, Nil>(893734420, new DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>(playerIndex, itemType, x, y));
         }
 
 
@@ -457,6 +497,11 @@ namespace GameKing.Shared.Hubs {
             public global::System.Threading.Tasks.Task MovePosAsync(int playerIndex, int x, int y)
             {
                 return __parent.WriteMessageAsync<DynamicArgumentTuple<int, int, int>>(1146928034, new DynamicArgumentTuple<int, int, int>(playerIndex, x, y));
+            }
+
+            public global::System.Threading.Tasks.Task GetItemAsync(int playerIndex, global::GameKing.Shared.MessagePackObjects.ItemType itemType, int x, int y)
+            {
+                return __parent.WriteMessageAsync<DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>>(893734420, new DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>(playerIndex, itemType, x, y));
             }
 
         }

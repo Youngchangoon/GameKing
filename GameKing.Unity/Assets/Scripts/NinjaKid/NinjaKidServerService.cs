@@ -122,6 +122,11 @@ namespace GameKing.Unity.NinjaKid
             await _streamingClient.MovePosAsync(_myPlayerIndex, x, y);
         }
 
+        public async UniTaskVoid GetItemAsync(int playerIndex, ItemType itemType, int x, int y)
+        {
+            await _streamingClient.GetItemAsync(playerIndex, itemType, x, y);
+        }
+
 
         // ------- Received Server -----
 
@@ -180,6 +185,12 @@ namespace GameKing.Unity.NinjaKid
             }
         }
 
+        public void OnPlacedItem(ItemPlacedInfo[] itemPlacedInfos)
+        {
+            foreach (var itemPlacedInfo in itemPlacedInfos)
+                _mapService.AddItem(itemPlacedInfo);
+        }
+
         public void OnAttackedCell(int damage, int x, int y)
         {
             _mapService.SetOpen(x, y, true);
@@ -190,6 +201,11 @@ namespace GameKing.Unity.NinjaKid
         {
             for (var i = 0; i < markModels.Length; ++i)
                 _markService.SetMarkPos(markModels[i], i, _myPlayerIndex == i);
+        }
+        
+        public void OnGetItem(int playerIndex, ItemType itemType, int x, int y)
+        {
+            
         }
     }
 }

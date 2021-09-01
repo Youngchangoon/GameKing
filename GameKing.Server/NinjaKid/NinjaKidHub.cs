@@ -93,37 +93,70 @@ namespace GameKing.Server
         {
             Console.WriteLine($"Attacker Index: {playerIndex}, x: {x}, y: {y}");
 
-            var gameModel = await _gameModelRedis.GetAsync();
-            var damage = gameModel.Value.Attack(playerIndex, x, y);
+            var gameModelResult = await _gameModelRedis.GetAsync();
+            var gameModel = gameModelResult.Value;
+            var damage = gameModel.Attack(playerIndex, x, y);
 
-            var nextTurnIndex = gameModel.Value.CheckTurnEnd();
+            var nextTurnIndex = gameModel.CheckTurnEnd();
             var isNextTurn = nextTurnIndex != -1;
-            var gameEndType = gameModel.Value.GetGameEndState();
+            var gameEndType = gameModel.GetGameEndState();
+            ItemPlacedInfo[] itemPlacedInfoArr = null;
 
-            await _gameModelRedis.SetAsync(gameModel.Value);
+            if (isNextTurn && nextTurnIndex == 0)
+                itemPlacedInfoArr = gameModel.GenerateRandomItem(2);
+
+            await _gameModelRedis.SetAsync(gameModel);
 
             Broadcast(_room).OnAttackedCell(damage, x, y);
 
             if (gameEndType != GameEndType.None)
                 Broadcast(_room).OnGameState(GameState.GameEnd, gameEndType);
             else if (isNextTurn)
+            {
+                if (itemPlacedInfoArr != null)
+                    Broadcast(_room).OnPlacedItem(itemPlacedInfoArr);
+
                 Broadcast(_room).OnStartTurn(nextTurnIndex);
+            }
         }
 
         public async Task MovePosAsync(int playerIndex, int x, int y)
         {
-            var gameModel = await _gameModelRedis.GetAsync();
-            gameModel.Value.Move(playerIndex, x, y);
+            var gameModelResult = await _gameModelRedis.GetAsync();
+            var gameModel = gameModelResult.Value;
+            gameModel.Move(playerIndex, x, y);
 
-            var nextTurnIndex = gameModel.Value.CheckTurnEnd();
+            var nextTurnIndex = gameModel.CheckTurnEnd();
             var isNextTurn = nextTurnIndex != -1;
+            ItemPlacedInfo[] itemPlacedInfoArr = null;
 
-            await _gameModelRedis.SetAsync(gameModel.Value);
+            if (isNextTurn && nextTurnIndex == 0)
+                itemPlacedInfoArr = gameModel.GenerateRandomItem(2);
 
-            Broadcast(_room).OnMovedCell(gameModel.Value.MarkModels);
+            await _gameModelRedis.SetAsync(gameModel);
+
+            Broadcast(_room).OnMovedCell(gameModel.MarkModels);
 
             if (isNextTurn)
+            {
+                if (itemPlacedInfoArr != null)
+                    Broadcast(_room).OnPlacedItem(itemPlacedInfoArr);
+
                 Broadcast(_room).OnStartTurn(nextTurnIndex);
+            }
+        }
+
+        public async Task GetItemAsync(int playerIndex, ItemType itemType, int x, int y)
+        {
+            var gameModelResult = await _gameModelRedis.GetAsync();
+            var gameModel = gameModelResult.Value;
+            var willGetMark = gameModel.MarkModels[playerIndex];
+
+            willGetMark.items.Add(itemType);
+
+            await _gameModelRedis.SetAsync(gameModel);
+
+            Broadcast(_room).OnGetItem(playerIndex, itemType, x, y);
         }
     }
 }

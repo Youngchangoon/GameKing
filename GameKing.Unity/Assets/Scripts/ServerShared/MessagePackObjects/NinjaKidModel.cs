@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using MessagePack;
 
 namespace GameKing.Shared.MessagePackObjects
@@ -23,8 +24,8 @@ namespace GameKing.Shared.MessagePackObjects
 
             MarkModels = new MarkModel[2]
             {
-                new MarkModel() { x = -1, y = -1, hp = 100, damage = 100 },
-                new MarkModel() { x = -1, y = -1, hp = 100, damage = 100 },
+                new MarkModel() { x = -1, y = -1, hp = 100, damage = 20, items = new List<ItemType>() },
+                new MarkModel() { x = -1, y = -1, hp = 100, damage = 20, items = new List<ItemType>() },
             };
         }
 
@@ -133,6 +134,40 @@ namespace GameKing.Shared.MessagePackObjects
                 return GameEndType.PlayerWin0;
 
             return GameEndType.None;
+        }
+
+        public ItemPlacedInfo[] GenerateRandomItem(int generateItemCount)
+        {
+            var itemPlacedInfoArr = new ItemPlacedInfo[generateItemCount];
+            
+            for (var i = 0; i < generateItemCount; ++i)
+            {
+                var items = Enum.GetValues(typeof(ItemType));
+                var newItemType = (ItemType)items.GetValue(new Random().Next(1, items.Length)); // 0은 None이니 제외
+                var mapArray = MapModel.list;
+                var nonePosList = new List<Tuple<int, int>>();
+
+                for (var y = 0; y < mapArray.Count; ++y)
+                {
+                    for (var x = 0; x < mapArray[y].Count; ++x)
+                    {
+                        if (mapArray[y][x].ItemModel.ItemType != ItemType.None)
+                            continue;
+
+                        nonePosList.Add(new Tuple<int, int>(x, y));
+                    }
+                }
+
+                if (nonePosList.Count == 0)
+                    return null;
+
+                var (posX, posY) = nonePosList[new Random().Next(0, nonePosList.Count)];
+                mapArray[posY][posX].ItemModel.ItemType = newItemType;
+
+                itemPlacedInfoArr[i] = new ItemPlacedInfo(posX, posY, newItemType);
+            }
+
+            return itemPlacedInfoArr;
         }
     }
 }

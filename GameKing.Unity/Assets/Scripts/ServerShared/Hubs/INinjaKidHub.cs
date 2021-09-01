@@ -45,5 +45,15 @@ namespace GameKing.Shared.Hubs
         /// <param name="y"></param>
         /// <returns></returns>
         Task MovePosAsync(int playerIndex, int x, int y);
+
+        /// <summary>
+        /// 유저가 아이템을 얻는다.
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="itemType"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        Task GetItemAsync(int playerIndex, ItemType itemType, int x, int y);
     }
 }

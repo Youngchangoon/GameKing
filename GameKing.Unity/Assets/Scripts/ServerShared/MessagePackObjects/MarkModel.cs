@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using System.Collections.Generic;
+using MessagePack;
 
 namespace GameKing.Shared.MessagePackObjects
 {
@@ -10,5 +11,7 @@ namespace GameKing.Shared.MessagePackObjects
 
         [Key(2)] public int hp;
         [Key(3)] public int damage;
+
+        [Key(4)] public List<ItemType> items;
     }
 }

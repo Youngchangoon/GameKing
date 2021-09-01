@@ -34,9 +34,17 @@ namespace GameKing.Shared.Hubs
         /// </summary>
         /// <param name="curTurnPlayerIndex">턴 시작하는 유저 인덱스</param>
         void OnStartTurn(int curTurnPlayerIndex);
+        
+        /// <summary>
+        /// 아이템을 Cell에 올림
+        /// </summary>
+        /// <param name="itemPlacedInfo">아이템 드랍 인포</param>
+        void OnPlacedItem(ItemPlacedInfo[] itemPlacedInfo);
 
         void OnAttackedCell(int damage, int x, int y);
 
         void OnMovedCell(MarkModel[] markModels);
+
+        void OnGetItem(int playerIndex, ItemType itemType, int x, int y);
     }
 }
