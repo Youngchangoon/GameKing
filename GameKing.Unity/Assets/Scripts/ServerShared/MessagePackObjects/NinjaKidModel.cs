@@ -24,8 +24,8 @@ namespace GameKing.Shared.MessagePackObjects
 
             MarkModels = new MarkModel[2]
             {
-                new MarkModel() { x = -1, y = -1, hp = 100, damage = 20, items = new List<ItemType>() },
-                new MarkModel() { x = -1, y = -1, hp = 100, damage = 20, items = new List<ItemType>() },
+                new MarkModel() { x = -1, y = -1, hp = 100, damage = 20, items = new List<ItemKind>() },
+                new MarkModel() { x = -1, y = -1, hp = 100, damage = 20, items = new List<ItemKind>() },
             };
         }
 
@@ -136,14 +136,14 @@ namespace GameKing.Shared.MessagePackObjects
             return GameEndType.None;
         }
 
-        public ItemPlacedInfo[] GenerateRandomItem(int generateItemCount)
+        public ItemInfo[] GenerateRandomItem(int generateItemCount)
         {
-            var itemPlacedInfoArr = new ItemPlacedInfo[generateItemCount];
+            var itemPlacedInfoArr = new ItemInfo[generateItemCount];
             
             for (var i = 0; i < generateItemCount; ++i)
             {
-                var items = Enum.GetValues(typeof(ItemType));
-                var newItemType = (ItemType)items.GetValue(new Random().Next(1, items.Length)); // 0은 None이니 제외
+                var items = Enum.GetValues(typeof(ItemKind));
+                var newItemType = (ItemKind)items.GetValue(new Random().Next(1, items.Length)); // 0은 None이니 제외
                 var mapArray = MapModel.list;
                 var nonePosList = new List<Tuple<int, int>>();
 
@@ -151,7 +151,7 @@ namespace GameKing.Shared.MessagePackObjects
                 {
                     for (var x = 0; x < mapArray[y].Count; ++x)
                     {
-                        if (mapArray[y][x].ItemModel.ItemType != ItemType.None)
+                        if (mapArray[y][x].ItemModel.ItemKind != ItemKind.None)
                             continue;
 
                         nonePosList.Add(new Tuple<int, int>(x, y));
@@ -162,12 +162,39 @@ namespace GameKing.Shared.MessagePackObjects
                     return null;
 
                 var (posX, posY) = nonePosList[new Random().Next(0, nonePosList.Count)];
-                mapArray[posY][posX].ItemModel.ItemType = newItemType;
+                mapArray[posY][posX].ItemModel.ItemKind = newItemType;
 
-                itemPlacedInfoArr[i] = new ItemPlacedInfo(posX, posY, newItemType);
+                itemPlacedInfoArr[i] = new ItemInfo(posX, posY, newItemType);
             }
 
             return itemPlacedInfoArr;
+        }
+
+        /// <summary>
+        /// 해당 위치의 아이템이 있다면 먹는다.
+        /// </summary>
+        public ItemInfo CheckAndGetItemOrNull(int playerIndex, int x, int y)
+        {
+            var curCellItemModel = MapModel.list[y][x].ItemModel;
+            var cellItemType = curCellItemModel.ItemKind;
+
+            if (cellItemType != ItemKind.None)
+            {
+                MarkModels[playerIndex].items.Add(cellItemType);
+                curCellItemModel.ItemKind = ItemKind.None;
+            }
+
+            return cellItemType != ItemKind.None ? new ItemInfo(x, y, cellItemType) : null;
+        }
+
+        /// <summary>
+        /// 아이템을 사용한다.
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="itemKind"></param>
+        public void UseItem(int playerIndex, ItemKind itemKind)
+        {
+            MarkModels[playerIndex].items.Remove(itemKind);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GameKing.Server
                     addCellModelList.Add(new CellModel
                     {
                         IsOpen = false,
-                        ItemModel = new ItemModel { ItemType = ItemType.None, }
+                        ItemModel = new ItemModel { ItemKind = ItemKind.None, }
                     });
 
                 mapModel.list.Add(addCellModelList);

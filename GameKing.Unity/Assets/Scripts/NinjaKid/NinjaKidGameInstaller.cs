@@ -1,4 +1,4 @@
-﻿using GameKing.Shared.MessagePackObjects;
+﻿using GameKing.Unity.NinjaKid.Item;
 using GameKing.Unity.NinjaKid.Map;
 using UniRx;
 using UnityEngine;
@@ -17,12 +17,14 @@ namespace GameKing.Unity.NinjaKid
             Container.BindInterfacesAndSelfTo<NinjaKidServerService>().AsSingle();
             Container.BindInterfacesAndSelfTo<MapService>().AsSingle();
             Container.BindInterfacesAndSelfTo<MarkService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ItemService>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<MapView>().FromInstance(FindObjectOfType<MapView>());
             Container.Bind<MarkView>().WithId("Mark0").FromComponentInNewPrefab(markPrefab).AsTransient();
             Container.Bind<MarkView>().WithId("Mark1").FromComponentInNewPrefab(markPrefab).AsTransient();
 
             Container.Bind<InGameScreen>().FromInstance(FindObjectOfType<InGameScreen>());
+            Container.Bind<ItemListView>().FromInstance(FindObjectOfType<ItemListView>());
 
             SignalBusInstaller.Install(Container);
         }

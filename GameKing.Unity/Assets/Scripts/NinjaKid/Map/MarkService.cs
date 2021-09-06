@@ -11,6 +11,7 @@ namespace GameKing.Unity.NinjaKid.Map
 
         [Inject] private MapService _mapService;
         [Inject] private MapView _mapView;
+        [Inject] private ItemListView _itemListView;
 
         private MarkModel[] _markModels;
         private MarkView[] _markViews;
@@ -22,6 +23,8 @@ namespace GameKing.Unity.NinjaKid.Map
 
             for (var i = 0; i < _markViews.Length; ++i)
                 _markViews[i].Init(i, _mapView.transform.Find("MarkRoot"));
+            
+            _itemListView.PreInit();
         }
 
         /// <summary>
@@ -67,6 +70,13 @@ namespace GameKing.Unity.NinjaKid.Map
                 curModel.hp -= damage;
                 _markViews[i].SetHp(curModel.hp, 100);
             }
+        }
+
+        public void GetNewItem(int playerIndex, ItemInfo itemInfo)
+        {
+            _markModels[playerIndex].items.Add(itemInfo.ItemKind);
+            
+            _itemListView.AddItem(itemInfo.ItemKind, itemInfo.GetItemType());
         }
     }
 }

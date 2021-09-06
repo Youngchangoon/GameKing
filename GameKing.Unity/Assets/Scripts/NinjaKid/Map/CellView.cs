@@ -14,10 +14,13 @@ namespace GameKing.Unity.NinjaKid.Map
         [SerializeField] private RectTransform[] doorTrsArr;
 
         private Vector2Int _cellPos;
+        
+        public ItemView ItemViewInCell { get; set; }
 
         public void Init(Vector2Int cellPos)
         {
             _cellPos = cellPos;
+            ItemViewInCell = null;
 
             UpdateCellCanSelect(false);
         }

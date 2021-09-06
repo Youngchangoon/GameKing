@@ -1,0 +1,78 @@
+﻿using System;
+using Cysharp.Threading.Tasks;
+using GameKing.Shared.MessagePackObjects;
+using GameKing.Unity.NinjaKid.Map;
+using GameKing.Unity.NinjaKid.Messages;
+using UniRx;
+using Zenject;
+
+namespace GameKing.Unity.NinjaKid.Item
+{
+    public class ItemService : IInitializable
+    {
+        [Inject] private NinjaKidServerService _serverService;
+        [Inject] private MapService _mapService;
+
+        public ActionType CurActionType { get; private set; }
+
+        public void Initialize()
+        {
+            MessageBroker.Default.Receive<ActionType>().Subscribe(action =>
+            {
+                CurActionType = action;
+            });
+
+            MessageBroker.Default.Receive<UseItemEvent>().Subscribe(itemEvent =>
+            {
+                UseItem(itemEvent.ItemKind, itemEvent.ItemType).Forget();
+            });
+        }
+
+        private async UniTaskVoid UseItem(ItemKind itemKind, ItemType itemType)
+        {
+            if (CurActionType == ActionType.None)
+            {
+                if (itemType == ItemType.Attack)
+                    _mapService.UpdateMapState(MapState.AttackPos);
+                if (itemType == ItemType.Defence)
+                    _mapService.UpdateMapState(MapState.MovePos);
+            }
+            else
+            {
+                await _serverService.UseItemAsync(itemKind);
+                AdaptItem(itemKind);
+            }
+        }
+
+        private void AdaptItem(ItemKind itemKind)
+        {
+            switch (itemKind)
+            {
+                case ItemKind.None:
+                    break;
+                case ItemKind.Shield:
+                    break;
+                case ItemKind.MoveUp:
+                    break;
+                case ItemKind.Teleport:
+                    break;
+                case ItemKind.Energy:
+                    break;
+                case ItemKind.SeeThrough:
+                    break;
+                case ItemKind.DamageUp:
+                    break;
+                case ItemKind.Lock:
+                    break;
+                case ItemKind.Double:
+                    break;
+                case ItemKind.Multi:
+                    break;
+                case ItemKind.SeeThroughAll:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(itemKind), itemKind, null);
+            }
+        }
+    }
+}

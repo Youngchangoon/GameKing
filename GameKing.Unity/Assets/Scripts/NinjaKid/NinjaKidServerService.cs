@@ -4,13 +4,10 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using GameKing.Shared.Hubs;
 using GameKing.Shared.MessagePackObjects;
-using GameKing.Shared.Services;
 using GameKing.Unity.NinjaKid.Map;
-using GameKing.Unity.NinjaKid.Messages;
 using Grpc.Core;
 using MagicOnion;
 using MagicOnion.Client;
-using UniRx;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -122,11 +119,10 @@ namespace GameKing.Unity.NinjaKid
             await _streamingClient.MovePosAsync(_myPlayerIndex, x, y);
         }
 
-        public async UniTaskVoid GetItemAsync(int playerIndex, ItemType itemType, int x, int y)
+        public async UniTask UseItemAsync(ItemKind itemKind)
         {
-            await _streamingClient.GetItemAsync(playerIndex, itemType, x, y);
+            await _streamingClient.UseItemAsync(itemKind);
         }
-
 
         // ------- Received Server -----
 
@@ -171,7 +167,6 @@ namespace GameKing.Unity.NinjaKid
 
         public void OnStartTurn(int curTurnPlayerIndex)
         {
-            Debug.Log("CUR TURN PlayerINDEX: " + curTurnPlayerIndex + ", myIDX: " + _myPlayerIndex);
             CurTurnPlayerIndex = curTurnPlayerIndex;
 
             if (_myPlayerIndex == curTurnPlayerIndex)
@@ -185,7 +180,7 @@ namespace GameKing.Unity.NinjaKid
             }
         }
 
-        public void OnPlacedItem(ItemPlacedInfo[] itemPlacedInfos)
+        public void OnPlacedItem(ItemInfo[] itemPlacedInfos)
         {
             foreach (var itemPlacedInfo in itemPlacedInfos)
                 _mapService.AddItem(itemPlacedInfo);
@@ -202,10 +197,20 @@ namespace GameKing.Unity.NinjaKid
             for (var i = 0; i < markModels.Length; ++i)
                 _markService.SetMarkPos(markModels[i], i, _myPlayerIndex == i);
         }
-        
-        public void OnGetItem(int playerIndex, ItemType itemType, int x, int y)
+
+        public void OnGetItem(int playerIndex, ItemInfo itemInfo)
         {
-            
+            // 맵에서 삭제
+            _mapService.RemoveItem(itemInfo);
+
+            // 아이템이 내것이라면 Get
+            if (_myPlayerIndex == playerIndex)
+                _markService.GetNewItem(playerIndex, itemInfo);
+        }
+
+        public void NoticeItemUsed(int playerIndex, ItemKind itemKind)
+        {
+            Debug.Log($"PLAYER {playerIndex} USED ITEM({itemKind})!");
         }
     }
 }

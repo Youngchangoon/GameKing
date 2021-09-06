@@ -15,7 +15,7 @@
         Draw,           // 무승부
     }
 
-    public enum ItemType
+    public enum ItemKind
     {
         None,
         Shield,     // (방어) 자신을 방어하는 실드 생성
@@ -28,5 +28,11 @@
         Double,     // (공격) 한 곳을 두번 공격한다.
         Multi,      // (공격) 2곳을 동시에 공격한다.
         SeeThroughAll, // (공격) 전체 셀을 투시한다.
+    }
+
+    public enum ItemType
+    {
+        Attack,
+        Defence,
     }
 }

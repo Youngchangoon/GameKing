@@ -53,9 +53,9 @@ namespace MessagePack.Resolvers
             {
                 { typeof(global::GameKing.Shared.MessagePackObjects.MarkModel[]), 0 },
                 { typeof(global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.CellModel>), 1 },
-                { typeof(global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.ItemType>), 2 },
+                { typeof(global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.ItemKind>), 2 },
                 { typeof(global::System.Collections.Generic.List<global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.CellModel>>), 3 },
-                { typeof(global::GameKing.Shared.MessagePackObjects.ItemType), 4 },
+                { typeof(global::GameKing.Shared.MessagePackObjects.ItemKind), 4 },
                 { typeof(global::GameKing.Shared.MessagePackObjects.CellModel), 5 },
                 { typeof(global::GameKing.Shared.MessagePackObjects.GameStartResponse), 6 },
                 { typeof(global::GameKing.Shared.MessagePackObjects.ItemModel), 7 },
@@ -63,7 +63,7 @@ namespace MessagePack.Resolvers
                 { typeof(global::GameKing.Shared.MessagePackObjects.MapModel), 9 },
                 { typeof(global::GameKing.Shared.MessagePackObjects.MarkModel), 10 },
                 { typeof(global::GameKing.Shared.MessagePackObjects.NinjaKidModel), 11 },
-                { typeof(global::ItemPlacedInfo), 12 },
+                { typeof(global::ItemInfo), 12 },
             };
         }
 
@@ -79,9 +79,9 @@ namespace MessagePack.Resolvers
             {
                 case 0: return new global::MessagePack.Formatters.ArrayFormatter<global::GameKing.Shared.MessagePackObjects.MarkModel>();
                 case 1: return new global::MessagePack.Formatters.ListFormatter<global::GameKing.Shared.MessagePackObjects.CellModel>();
-                case 2: return new global::MessagePack.Formatters.ListFormatter<global::GameKing.Shared.MessagePackObjects.ItemType>();
+                case 2: return new global::MessagePack.Formatters.ListFormatter<global::GameKing.Shared.MessagePackObjects.ItemKind>();
                 case 3: return new global::MessagePack.Formatters.ListFormatter<global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.CellModel>>();
-                case 4: return new MessagePack.Formatters.GameKing.Shared.MessagePackObjects.ItemTypeFormatter();
+                case 4: return new MessagePack.Formatters.GameKing.Shared.MessagePackObjects.ItemKindFormatter();
                 case 5: return new MessagePack.Formatters.GameKing.Shared.MessagePackObjects.CellModelFormatter();
                 case 6: return new MessagePack.Formatters.GameKing.Shared.MessagePackObjects.GameStartResponseFormatter();
                 case 7: return new MessagePack.Formatters.GameKing.Shared.MessagePackObjects.ItemModelFormatter();
@@ -89,7 +89,7 @@ namespace MessagePack.Resolvers
                 case 9: return new MessagePack.Formatters.GameKing.Shared.MessagePackObjects.MapModelFormatter();
                 case 10: return new MessagePack.Formatters.GameKing.Shared.MessagePackObjects.MarkModelFormatter();
                 case 11: return new MessagePack.Formatters.GameKing.Shared.MessagePackObjects.NinjaKidModelFormatter();
-                case 12: return new MessagePack.Formatters.ItemPlacedInfoFormatter();
+                case 12: return new MessagePack.Formatters.ItemInfoFormatter();
                 default: return null;
             }
         }
@@ -125,16 +125,16 @@ namespace MessagePack.Formatters.GameKing.Shared.MessagePackObjects
     using System.Buffers;
     using MessagePack;
 
-    public sealed class ItemTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GameKing.Shared.MessagePackObjects.ItemType>
+    public sealed class ItemKindFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GameKing.Shared.MessagePackObjects.ItemKind>
     {
-        public void Serialize(ref MessagePackWriter writer, global::GameKing.Shared.MessagePackObjects.ItemType value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref MessagePackWriter writer, global::GameKing.Shared.MessagePackObjects.ItemKind value, global::MessagePack.MessagePackSerializerOptions options)
         {
             writer.Write((Int32)value);
         }
 
-        public global::GameKing.Shared.MessagePackObjects.ItemType Deserialize(ref MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::GameKing.Shared.MessagePackObjects.ItemKind Deserialize(ref MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
-            return (global::GameKing.Shared.MessagePackObjects.ItemType)reader.ReadInt32();
+            return (global::GameKing.Shared.MessagePackObjects.ItemKind)reader.ReadInt32();
         }
     }
 }
@@ -288,7 +288,7 @@ namespace MessagePack.Formatters.GameKing.Shared.MessagePackObjects
 
             IFormatterResolver formatterResolver = options.Resolver;
             writer.WriteArrayHeader(1);
-            formatterResolver.GetFormatterWithVerify<global::GameKing.Shared.MessagePackObjects.ItemType>().Serialize(ref writer, value.ItemType, options);
+            formatterResolver.GetFormatterWithVerify<global::GameKing.Shared.MessagePackObjects.ItemKind>().Serialize(ref writer, value.ItemKind, options);
         }
 
         public global::GameKing.Shared.MessagePackObjects.ItemModel Deserialize(ref MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -301,7 +301,7 @@ namespace MessagePack.Formatters.GameKing.Shared.MessagePackObjects
             options.Security.DepthStep(ref reader);
             IFormatterResolver formatterResolver = options.Resolver;
             var length = reader.ReadArrayHeader();
-            var __ItemType__ = default(global::GameKing.Shared.MessagePackObjects.ItemType);
+            var __ItemKind__ = default(global::GameKing.Shared.MessagePackObjects.ItemKind);
 
             for (int i = 0; i < length; i++)
             {
@@ -310,7 +310,7 @@ namespace MessagePack.Formatters.GameKing.Shared.MessagePackObjects
                 switch (key)
                 {
                     case 0:
-                        __ItemType__ = formatterResolver.GetFormatterWithVerify<global::GameKing.Shared.MessagePackObjects.ItemType>().Deserialize(ref reader, options);
+                        __ItemKind__ = formatterResolver.GetFormatterWithVerify<global::GameKing.Shared.MessagePackObjects.ItemKind>().Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -319,7 +319,7 @@ namespace MessagePack.Formatters.GameKing.Shared.MessagePackObjects
             }
 
             var ____result = new global::GameKing.Shared.MessagePackObjects.ItemModel();
-            ____result.ItemType = __ItemType__;
+            ____result.ItemKind = __ItemKind__;
             reader.Depth--;
             return ____result;
         }
@@ -445,7 +445,7 @@ namespace MessagePack.Formatters.GameKing.Shared.MessagePackObjects
             writer.Write(value.y);
             writer.Write(value.hp);
             writer.Write(value.damage);
-            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.ItemType>>().Serialize(ref writer, value.items, options);
+            formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.ItemKind>>().Serialize(ref writer, value.items, options);
         }
 
         public global::GameKing.Shared.MessagePackObjects.MarkModel Deserialize(ref MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
@@ -462,7 +462,7 @@ namespace MessagePack.Formatters.GameKing.Shared.MessagePackObjects
             var __y__ = default(int);
             var __hp__ = default(int);
             var __damage__ = default(int);
-            var __items__ = default(global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.ItemType>);
+            var __items__ = default(global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.ItemKind>);
 
             for (int i = 0; i < length; i++)
             {
@@ -483,7 +483,7 @@ namespace MessagePack.Formatters.GameKing.Shared.MessagePackObjects
                         __damage__ = reader.ReadInt32();
                         break;
                     case 4:
-                        __items__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.ItemType>>().Deserialize(ref reader, options);
+                        __items__ = formatterResolver.GetFormatterWithVerify<global::System.Collections.Generic.List<global::GameKing.Shared.MessagePackObjects.ItemKind>>().Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -613,11 +613,11 @@ namespace MessagePack.Formatters
     using System.Buffers;
     using MessagePack;
 
-    public sealed class ItemPlacedInfoFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::ItemPlacedInfo>
+    public sealed class ItemInfoFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::ItemInfo>
     {
 
 
-        public void Serialize(ref MessagePackWriter writer, global::ItemPlacedInfo value, global::MessagePack.MessagePackSerializerOptions options)
+        public void Serialize(ref MessagePackWriter writer, global::ItemInfo value, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (value == null)
             {
@@ -629,10 +629,10 @@ namespace MessagePack.Formatters
             writer.WriteArrayHeader(3);
             writer.Write(value.x);
             writer.Write(value.y);
-            formatterResolver.GetFormatterWithVerify<global::GameKing.Shared.MessagePackObjects.ItemType>().Serialize(ref writer, value.itemType, options);
+            formatterResolver.GetFormatterWithVerify<global::GameKing.Shared.MessagePackObjects.ItemKind>().Serialize(ref writer, value.ItemKind, options);
         }
 
-        public global::ItemPlacedInfo Deserialize(ref MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
+        public global::ItemInfo Deserialize(ref MessagePackReader reader, global::MessagePack.MessagePackSerializerOptions options)
         {
             if (reader.TryReadNil())
             {
@@ -644,7 +644,7 @@ namespace MessagePack.Formatters
             var length = reader.ReadArrayHeader();
             var __x__ = default(int);
             var __y__ = default(int);
-            var __itemType__ = default(global::GameKing.Shared.MessagePackObjects.ItemType);
+            var __ItemKind__ = default(global::GameKing.Shared.MessagePackObjects.ItemKind);
 
             for (int i = 0; i < length; i++)
             {
@@ -659,7 +659,7 @@ namespace MessagePack.Formatters
                         __y__ = reader.ReadInt32();
                         break;
                     case 2:
-                        __itemType__ = formatterResolver.GetFormatterWithVerify<global::GameKing.Shared.MessagePackObjects.ItemType>().Deserialize(ref reader, options);
+                        __ItemKind__ = formatterResolver.GetFormatterWithVerify<global::GameKing.Shared.MessagePackObjects.ItemKind>().Deserialize(ref reader, options);
                         break;
                     default:
                         reader.Skip();
@@ -667,10 +667,10 @@ namespace MessagePack.Formatters
                 }
             }
 
-            var ____result = new global::ItemPlacedInfo(__x__, __y__, __itemType__);
+            var ____result = new global::ItemInfo(__x__, __y__, __ItemKind__);
             ____result.x = __x__;
             ____result.y = __y__;
-            ____result.itemType = __itemType__;
+            ____result.ItemKind = __ItemKind__;
             reader.Depth--;
             return ____result;
         }

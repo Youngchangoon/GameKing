@@ -6,14 +6,16 @@ namespace GameKing.Unity.NinjaKid
     public class ItemView : MonoBehaviour
     {
         [SerializeField] private float yOffset;
-        public ItemType MyItemType { get; private set; }
+        public ItemKind MyItemKind { get; private set; }
         
-        public void Init(Vector3 cellLocalPos, ItemType itemType)
+        public void Init(Vector3 cellLocalPos, ItemKind itemKind)
         {
             cellLocalPos.y += yOffset;
             
             transform.localPosition = cellLocalPos;
-            MyItemType = itemType;
+            MyItemKind = itemKind;
         }
+        
+        
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using GameKing.Shared.MessagePackObjects;
+﻿using GameKing.Shared.MessagePackObjects;
 using GameKing.Unity.NinjaKid.Messages;
 using UniRx;
 using UnityEngine;
@@ -95,20 +93,19 @@ namespace GameKing.Unity.NinjaKid.Map
             }
         }
 
-        public void CheckAllGetItem()
-        {
-            // _markService
-            // _mapView.CheckAllGetItem()
-        }
-
         public Vector2 GetMapPosition(int x, int y)
         {
             return _mapView.GetPosition(x, y);
         }
 
-        public void AddItem(ItemPlacedInfo itemsPlacedInfo)
+        public void AddItem(ItemInfo itemInfo)
         {
-            _mapView.AddItemInMap(itemsPlacedInfo);
+            _mapView.AddItemInMap(itemInfo);
+        }
+
+        public void RemoveItem(ItemInfo itemInfo)
+        {
+            _mapView.RemoveItemInMap(itemInfo);
         }
     }
 }

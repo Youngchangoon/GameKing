@@ -5,6 +5,6 @@ namespace GameKing.Shared.MessagePackObjects
     [MessagePackObject]
     public class ItemModel
     {
-        [Key(0)] public ItemType ItemType { get; set; }
+        [Key(0)] public ItemKind ItemKind { get; set; }
     }
 }

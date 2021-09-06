@@ -21,10 +21,9 @@ namespace GameKing.Unity.NinjaKid.Map
     {
         [SerializeField] private RectTransform cellRoot;
         [SerializeField] private CellView cellViewPrefab;
-        
+
         [SerializeField] private RectTransform itemRoot;
         [SerializeField] private ItemView itemViewPrefab;
-        
 
         public MapState CurMapState { get; private set; }
 
@@ -122,12 +121,21 @@ namespace GameKing.Unity.NinjaKid.Map
             }
         }
 
-        public void AddItemInMap(ItemPlacedInfo itemPlacedInfo)
+        public void AddItemInMap(ItemInfo itemInfo)
         {
             var newItemView = _itemViewPool.Pop();
-            var cellLocalPos = _cellArray[itemPlacedInfo.y][itemPlacedInfo.x].transform.localPosition;
+            var curCell = _cellArray[itemInfo.y][itemInfo.x];
 
-            newItemView.Init(cellLocalPos, itemPlacedInfo.itemType);
+            newItemView.Init(curCell.transform.localPosition, itemInfo.ItemKind);
+            curCell.ItemViewInCell = newItemView;
+        }
+
+        public void RemoveItemInMap(ItemInfo itemInfo)
+        {
+            var curCell = _cellArray[itemInfo.y][itemInfo.x];
+
+            _itemViewPool.Push(curCell.ItemViewInCell);
+            curCell.ItemViewInCell = null;
         }
     }
 }

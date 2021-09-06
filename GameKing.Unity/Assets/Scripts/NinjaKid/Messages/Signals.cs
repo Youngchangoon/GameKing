@@ -27,4 +27,10 @@ namespace GameKing.Unity.NinjaKid.Messages
     {
         public ActionType ActionType { get; set; }
     }
+
+    public class UseItemEvent
+    {
+        public ItemKind ItemKind { get; set; }
+        public ItemType ItemType { get; set; }
+    }
 }

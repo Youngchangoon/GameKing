@@ -12,6 +12,6 @@ namespace GameKing.Shared.MessagePackObjects
         [Key(2)] public int hp;
         [Key(3)] public int damage;
 
-        [Key(4)] public List<ItemType> items;
+        [Key(4)] public List<ItemKind> items;
     }
 }

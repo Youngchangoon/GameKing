@@ -81,16 +81,17 @@ namespace MagicOnion.Resolvers
 
         static MagicOnionResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(8)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(9)
             {
                 {typeof(global::GameKing.Shared.MessagePackObjects.MarkModel[]), 0 },
-                {typeof(global::ItemPlacedInfo[]), 1 },
+                {typeof(global::ItemInfo[]), 1 },
                 {typeof(global::MagicOnion.DynamicArgumentTuple<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>), 2 },
-                {typeof(global::MagicOnion.DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>), 3 },
-                {typeof(global::MagicOnion.DynamicArgumentTuple<int, int, int>), 4 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.GameEndType), 5 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.GameState), 6 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.ItemType), 7 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemKind>), 3 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<int, global::ItemInfo>), 4 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<int, int, int>), 5 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.GameEndType), 6 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.GameState), 7 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.ItemKind), 8 },
             };
         }
 
@@ -105,13 +106,14 @@ namespace MagicOnion.Resolvers
             switch (key)
             {
                 case 0: return new global::MessagePack.Formatters.ArrayFormatter<global::GameKing.Shared.MessagePackObjects.MarkModel>();
-                case 1: return new global::MessagePack.Formatters.ArrayFormatter<global::ItemPlacedInfo>();
+                case 1: return new global::MessagePack.Formatters.ArrayFormatter<global::ItemInfo>();
                 case 2: return new global::MagicOnion.DynamicArgumentTupleFormatter<global::GameKing.Shared.MessagePackObjects.GameState, global::GameKing.Shared.MessagePackObjects.GameEndType>(default(global::GameKing.Shared.MessagePackObjects.GameState), default(global::GameKing.Shared.MessagePackObjects.GameEndType));
-                case 3: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>(default(int), default(global::GameKing.Shared.MessagePackObjects.ItemType), default(int), default(int));
-                case 4: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, int, int>(default(int), default(int), default(int));
-                case 5: return new MagicOnion.Formatters.GameEndTypeFormatter();
-                case 6: return new MagicOnion.Formatters.GameStateFormatter();
-                case 7: return new MagicOnion.Formatters.ItemTypeFormatter();
+                case 3: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, global::GameKing.Shared.MessagePackObjects.ItemKind>(default(int), default(global::GameKing.Shared.MessagePackObjects.ItemKind));
+                case 4: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, global::ItemInfo>(default(int), default(global::ItemInfo));
+                case 5: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, int, int>(default(int), default(int), default(int));
+                case 6: return new MagicOnion.Formatters.GameEndTypeFormatter();
+                case 7: return new MagicOnion.Formatters.GameStateFormatter();
+                case 8: return new MagicOnion.Formatters.ItemKindFormatter();
                 default: return null;
             }
         }
@@ -160,16 +162,16 @@ namespace MagicOnion.Formatters
         }
     }
 
-    public sealed class ItemTypeFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GameKing.Shared.MessagePackObjects.ItemType>
+    public sealed class ItemKindFormatter : global::MessagePack.Formatters.IMessagePackFormatter<global::GameKing.Shared.MessagePackObjects.ItemKind>
     {
-        public void Serialize(ref MessagePackWriter writer, global::GameKing.Shared.MessagePackObjects.ItemType value, MessagePackSerializerOptions options)
+        public void Serialize(ref MessagePackWriter writer, global::GameKing.Shared.MessagePackObjects.ItemKind value, MessagePackSerializerOptions options)
         {
             writer.Write((Int32)value);
         }
         
-        public global::GameKing.Shared.MessagePackObjects.ItemType Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        public global::GameKing.Shared.MessagePackObjects.ItemKind Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
         {
-            return (global::GameKing.Shared.MessagePackObjects.ItemType)reader.ReadInt32();
+            return (global::GameKing.Shared.MessagePackObjects.ItemKind)reader.ReadInt32();
         }
     }
 
@@ -351,7 +353,7 @@ namespace GameKing.Shared.Hubs {
                 }
                 case -221887130: // OnPlacedItem
                 {
-                    var result = MessagePackSerializer.Deserialize<global::ItemPlacedInfo[]>(data, serializerOptions);
+                    var result = MessagePackSerializer.Deserialize<global::ItemInfo[]>(data, serializerOptions);
                     receiver.OnPlacedItem(result); break;
                 }
                 case -1796033523: // OnAttackedCell
@@ -366,8 +368,13 @@ namespace GameKing.Shared.Hubs {
                 }
                 case 1959756195: // OnGetItem
                 {
-                    var result = MessagePackSerializer.Deserialize<DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>>(data, serializerOptions);
-                    receiver.OnGetItem(result.Item1, result.Item2, result.Item3, result.Item4); break;
+                    var result = MessagePackSerializer.Deserialize<DynamicArgumentTuple<int, global::ItemInfo>>(data, serializerOptions);
+                    receiver.OnGetItem(result.Item1, result.Item2); break;
+                }
+                case -1734769397: // NoticeItemUsed
+                {
+                    var result = MessagePackSerializer.Deserialize<DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemKind>>(data, serializerOptions);
+                    receiver.NoticeItemUsed(result.Item1, result.Item2); break;
                 }
                 default:
                     break;
@@ -408,7 +415,7 @@ namespace GameKing.Shared.Hubs {
                     ((TaskCompletionSource<Nil>)taskCompletionSource).TrySetResult(result);
                     break;
                 }
-                case 893734420: // GetItemAsync
+                case -436752771: // UseItemAsync
                 {
                     var result = MessagePackSerializer.Deserialize<Nil>(data, serializerOptions);
                     ((TaskCompletionSource<Nil>)taskCompletionSource).TrySetResult(result);
@@ -444,9 +451,9 @@ namespace GameKing.Shared.Hubs {
             return WriteMessageWithResponseAsync<DynamicArgumentTuple<int, int, int>, Nil>(1146928034, new DynamicArgumentTuple<int, int, int>(playerIndex, x, y));
         }
 
-        public global::System.Threading.Tasks.Task GetItemAsync(int playerIndex, global::GameKing.Shared.MessagePackObjects.ItemType itemType, int x, int y)
+        public global::System.Threading.Tasks.Task UseItemAsync(global::GameKing.Shared.MessagePackObjects.ItemKind itemKind)
         {
-            return WriteMessageWithResponseAsync<DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>, Nil>(893734420, new DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>(playerIndex, itemType, x, y));
+            return WriteMessageWithResponseAsync<global::GameKing.Shared.MessagePackObjects.ItemKind, Nil>(-436752771, itemKind);
         }
 
 
@@ -499,9 +506,9 @@ namespace GameKing.Shared.Hubs {
                 return __parent.WriteMessageAsync<DynamicArgumentTuple<int, int, int>>(1146928034, new DynamicArgumentTuple<int, int, int>(playerIndex, x, y));
             }
 
-            public global::System.Threading.Tasks.Task GetItemAsync(int playerIndex, global::GameKing.Shared.MessagePackObjects.ItemType itemType, int x, int y)
+            public global::System.Threading.Tasks.Task UseItemAsync(global::GameKing.Shared.MessagePackObjects.ItemKind itemKind)
             {
-                return __parent.WriteMessageAsync<DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>>(893734420, new DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemType, int, int>(playerIndex, itemType, x, y));
+                return __parent.WriteMessageAsync<global::GameKing.Shared.MessagePackObjects.ItemKind>(-436752771, itemKind);
             }
 
         }

@@ -39,12 +39,14 @@ namespace GameKing.Shared.Hubs
         /// 아이템을 Cell에 올림
         /// </summary>
         /// <param name="itemPlacedInfo">아이템 드랍 인포</param>
-        void OnPlacedItem(ItemPlacedInfo[] itemPlacedInfo);
+        void OnPlacedItem(ItemInfo[] itemPlacedInfo);
 
         void OnAttackedCell(int damage, int x, int y);
 
         void OnMovedCell(MarkModel[] markModels);
 
-        void OnGetItem(int playerIndex, ItemType itemType, int x, int y);
+        void OnGetItem(int playerIndex, ItemInfo itemInfo);
+
+        void NoticeItemUsed(int playerIndex, ItemKind itemKind);
     }
 }
