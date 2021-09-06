@@ -1858,6 +1858,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackButton: {fileID: 516538752}
   moveButton: {fileID: 1345759802}
+  attackButtonText: {fileID: 1388388771}
+  moveButtonText: {fileID: 747376500}
   resultPopup: {fileID: 341586880}
 --- !u!1 &2133889530
 GameObject:

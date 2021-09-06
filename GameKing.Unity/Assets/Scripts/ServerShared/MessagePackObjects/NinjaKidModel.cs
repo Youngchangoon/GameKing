@@ -52,6 +52,11 @@ namespace GameKing.Shared.MessagePackObjects
         /// <param name="y"></param>
         public int Attack(int attackerIndex, int x, int y)
         {
+            IsAttacked = true;
+            
+            if (MapModel.IsOutOfRange(x, y))
+                return 0;
+            
             OpenCell(x, y);
 
             var damage = MarkModels[attackerIndex].damage;
@@ -66,18 +71,20 @@ namespace GameKing.Shared.MessagePackObjects
                 curModel.hp = Math.Max(0, curModel.hp);
             }
 
-            IsAttacked = true;
+            
             return damage;
         }
 
         public void Move(int playerIndex, int x, int y)
         {
-            var markModel = MarkModels[playerIndex];
+            IsMoved = true;
 
+            if (MapModel.IsOutOfRange(x, y))
+                return;
+
+            var markModel = MarkModels[playerIndex];
             markModel.x = x;
             markModel.y = y;
-
-            IsMoved = true;
         }
 
         public int CheckTurnEnd()
@@ -175,6 +182,9 @@ namespace GameKing.Shared.MessagePackObjects
         /// </summary>
         public ItemInfo CheckAndGetItemOrNull(int playerIndex, int x, int y)
         {
+            if (MapModel.IsOutOfRange(x, y))
+                return null;
+            
             var curCellItemModel = MapModel.list[y][x].ItemModel;
             var cellItemType = curCellItemModel.ItemKind;
 

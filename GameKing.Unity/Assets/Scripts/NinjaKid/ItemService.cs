@@ -4,6 +4,7 @@ using GameKing.Shared.MessagePackObjects;
 using GameKing.Unity.NinjaKid.Map;
 using GameKing.Unity.NinjaKid.Messages;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace GameKing.Unity.NinjaKid.Item
@@ -17,25 +18,20 @@ namespace GameKing.Unity.NinjaKid.Item
 
         public void Initialize()
         {
-            MessageBroker.Default.Receive<ActionType>().Subscribe(action =>
-            {
-                CurActionType = action;
-            });
-
-            MessageBroker.Default.Receive<UseItemEvent>().Subscribe(itemEvent =>
-            {
-                UseItem(itemEvent.ItemKind, itemEvent.ItemType).Forget();
-            });
+            MessageBroker.Default.Receive<ActionType>().Subscribe(action => { CurActionType = action; });
+            MessageBroker.Default.Receive<UseItemEvent>().Subscribe(itemEvent => { UseItem(itemEvent.ItemKind, itemEvent.ItemType).Forget(); });
         }
 
         private async UniTaskVoid UseItem(ItemKind itemKind, ItemType itemType)
         {
+            Debug.Log("CurActionType: " + CurActionType);
+
             if (CurActionType == ActionType.None)
             {
                 if (itemType == ItemType.Attack)
-                    _mapService.UpdateMapState(MapState.AttackPos);
+                    MessageBroker.Default.Publish(ActionType.Attack);
                 if (itemType == ItemType.Defence)
-                    _mapService.UpdateMapState(MapState.MovePos);
+                    MessageBroker.Default.Publish(ActionType.Move);
             }
             else
             {

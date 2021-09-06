@@ -8,6 +8,7 @@ using GameKing.Unity.NinjaKid.Map;
 using Grpc.Core;
 using MagicOnion;
 using MagicOnion.Client;
+using UniRx;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -111,12 +112,14 @@ namespace GameKing.Unity.NinjaKid
         {
             _inGameScreen.SetEnableButton(ActionType.Attack, false);
             await _streamingClient.AttackPosAsync(_myPlayerIndex, x, y);
+            MessageBroker.Default.Publish(ActionType.None);
         }
 
         public async UniTaskVoid MovePosAsync(int x, int y)
         {
             _inGameScreen.SetEnableButton(ActionType.Move, false);
             await _streamingClient.MovePosAsync(_myPlayerIndex, x, y);
+            MessageBroker.Default.Publish(ActionType.None);
         }
 
         public async UniTask UseItemAsync(ItemKind itemKind)
@@ -168,6 +171,7 @@ namespace GameKing.Unity.NinjaKid
         public void OnStartTurn(int curTurnPlayerIndex)
         {
             CurTurnPlayerIndex = curTurnPlayerIndex;
+            MessageBroker.Default.Publish(ActionType.None);
 
             if (_myPlayerIndex == curTurnPlayerIndex)
             {
@@ -188,6 +192,9 @@ namespace GameKing.Unity.NinjaKid
 
         public void OnAttackedCell(int damage, int x, int y)
         {
+            if (x < 0 || y < 0)
+                return;
+            
             _mapService.SetOpen(x, y, true);
             _markService.DamagePos(damage, x, y);
         }
