@@ -48,5 +48,7 @@ namespace GameKing.Shared.Hubs
         void OnGetItem(int playerIndex, ItemInfo itemInfo);
 
         void NoticeItemUsed(int playerIndex, ItemKind itemKind);
+
+        void OnHealedPlayer(int playerIndex, int addHp);
     }
 }

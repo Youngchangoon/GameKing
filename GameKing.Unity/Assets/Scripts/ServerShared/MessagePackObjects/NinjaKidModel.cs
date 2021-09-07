@@ -206,5 +206,12 @@ namespace GameKing.Shared.MessagePackObjects
         {
             MarkModels[playerIndex].items.Remove(itemKind);
         }
+
+        public void HealPlayer(int playerIndex, int addHp)
+        {
+            var curHp = MarkModels[playerIndex].hp;
+
+            MarkModels[playerIndex].hp = Math.Min(curHp + addHp, 100);
+        }
     }
 }

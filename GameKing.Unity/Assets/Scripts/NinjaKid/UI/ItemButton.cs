@@ -23,7 +23,12 @@ namespace GameKing.Unity.NinjaKid
 
         public void OnPressedItemButton()
         {
-            MessageBroker.Default.Publish(new UseItemEvent { ItemKind = _itemKind, ItemType = _itemType });
+            MessageBroker.Default.Publish(new UseItemEvent
+            {
+                ItemKind = _itemKind,
+                ItemType = _itemType,
+                ItemButton = this
+            });
         }
     }
 }

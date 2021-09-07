@@ -23,7 +23,7 @@ namespace GameKing.Unity.NinjaKid.Map
 
             for (var i = 0; i < _markViews.Length; ++i)
                 _markViews[i].Init(i, _mapView.transform.Find("MarkRoot"));
-            
+
             _itemListView.PreInit();
         }
 
@@ -75,8 +75,16 @@ namespace GameKing.Unity.NinjaKid.Map
         public void GetNewItem(int playerIndex, ItemInfo itemInfo)
         {
             _markModels[playerIndex].items.Add(itemInfo.ItemKind);
-            
+
             _itemListView.AddItem(itemInfo.ItemKind, itemInfo.GetItemType());
+        }
+
+        public void AddHp(int playerIndex, int addHp)
+        {
+            var curModel = _markModels[playerIndex];
+            curModel.hp += addHp;
+
+            _markViews[playerIndex].SetHp(curModel.hp, 100);
         }
     }
 }

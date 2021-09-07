@@ -32,5 +32,7 @@ namespace GameKing.Unity.NinjaKid.Messages
     {
         public ItemKind ItemKind { get; set; }
         public ItemType ItemType { get; set; }
+        
+        public ItemButton ItemButton { get; set; }
     }
 }

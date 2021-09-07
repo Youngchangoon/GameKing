@@ -32,9 +32,9 @@ namespace GameKing.Unity.NinjaKid
             newItemButton.Init(itemKind, itemType);
         }
 
-        public void RemoveItem(ItemKind itemKind, ItemType itemType)
+        public void RemoveItem(ItemButton itemButton)
         {
-            
+            _itemButtonPool.Push(itemButton);
         }
     }
 }

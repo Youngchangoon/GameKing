@@ -1,10 +1,8 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using GameKing.Shared.MessagePackObjects;
-using GameKing.Unity.NinjaKid.Map;
 using GameKing.Unity.NinjaKid.Messages;
 using UniRx;
-using UnityEngine;
 using Zenject;
 
 namespace GameKing.Unity.NinjaKid.Item
@@ -12,35 +10,33 @@ namespace GameKing.Unity.NinjaKid.Item
     public class ItemService : IInitializable
     {
         [Inject] private NinjaKidServerService _serverService;
-        [Inject] private MapService _mapService;
+        [Inject] private ItemListView _itemListView;
 
         public ActionType CurActionType { get; private set; }
 
         public void Initialize()
         {
             MessageBroker.Default.Receive<ActionType>().Subscribe(action => { CurActionType = action; });
-            MessageBroker.Default.Receive<UseItemEvent>().Subscribe(itemEvent => { UseItem(itemEvent.ItemKind, itemEvent.ItemType).Forget(); });
+            MessageBroker.Default.Receive<UseItemEvent>().Subscribe(itemEvent => { UseItem(itemEvent).Forget(); });
         }
 
-        private async UniTaskVoid UseItem(ItemKind itemKind, ItemType itemType)
+        private async UniTaskVoid UseItem(UseItemEvent itemEvent)
         {
-            Debug.Log("CurActionType: " + CurActionType);
-
+            // TODO: 만약 이미 공격을 한 상태라면 공격아이템을 사용하지 못하게, (방어아이템도 마찬가지)
             if (CurActionType == ActionType.None)
             {
-                if (itemType == ItemType.Attack)
+                if (itemEvent.ItemType == ItemType.Attack)
                     MessageBroker.Default.Publish(ActionType.Attack);
-                if (itemType == ItemType.Defence)
+                if (itemEvent.ItemType == ItemType.Defence)
                     MessageBroker.Default.Publish(ActionType.Move);
             }
-            else
-            {
-                await _serverService.UseItemAsync(itemKind);
-                AdaptItem(itemKind);
-            }
+
+            await _serverService.UseItemAsync(itemEvent.ItemKind);
+            _itemListView.RemoveItem(itemEvent.ItemButton);
+            await AdaptItem(itemEvent.ItemKind);
         }
 
-        private void AdaptItem(ItemKind itemKind)
+        private async UniTask AdaptItem(ItemKind itemKind)
         {
             switch (itemKind)
             {
@@ -53,6 +49,7 @@ namespace GameKing.Unity.NinjaKid.Item
                 case ItemKind.Teleport:
                     break;
                 case ItemKind.Energy:
+                    await _serverService.PlayerHeal(30);
                     break;
                 case ItemKind.SeeThrough:
                     break;

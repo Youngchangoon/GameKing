@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CloudStructures.Structures;
 using GameKing.Shared.Hubs;
@@ -162,6 +159,18 @@ namespace GameKing.Server
             gameModel.UseItem(_playerIndex, itemKind);
 
             Broadcast(_room).NoticeItemUsed(_playerIndex, itemKind);
+
+            await _gameModelRedis.SetAsync(gameModel);
+        }
+
+        public async Task HealPlayer(int playerIndex, int addHp)
+        {
+            var gameModelResult = await _gameModelRedis.GetAsync();
+            var gameModel = gameModelResult.Value;
+
+            gameModel.HealPlayer(playerIndex, addHp);
+            
+            Broadcast(_room).OnHealedPlayer(playerIndex, addHp);
 
             await _gameModelRedis.SetAsync(gameModel);
         }

@@ -49,9 +49,16 @@ namespace GameKing.Shared.Hubs
         /// <summary>
         /// 아이템을 사용한다.
         /// </summary>
-        /// <param name="playerIndex"></param>
         /// <param name="itemKind"></param>
         /// <returns></returns>
         Task UseItemAsync(ItemKind itemKind);
+
+        /// <summary>
+        /// 유저를 체력을 힐한다.
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="addHp"></param>
+        /// <returns></returns>
+        Task HealPlayer(int playerIndex, int addHp);
     }
 }

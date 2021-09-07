@@ -126,6 +126,16 @@ namespace GameKing.Unity.NinjaKid
         {
             await _streamingClient.UseItemAsync(itemKind);
         }
+        
+        // ------------------
+        // 아이템 관련
+        
+        public async UniTask PlayerHeal(int addHp, int playerIndex = -1)
+        {
+            playerIndex = playerIndex == -1 ? _myPlayerIndex : playerIndex;
+            
+            await _streamingClient.HealPlayer(playerIndex, addHp);
+        }
 
         // ------- Received Server -----
 
@@ -218,6 +228,11 @@ namespace GameKing.Unity.NinjaKid
         public void NoticeItemUsed(int playerIndex, ItemKind itemKind)
         {
             Debug.Log($"PLAYER {playerIndex} USED ITEM({itemKind})!");
+        }
+
+        public void OnHealedPlayer(int playerIndex, int addHp)
+        {
+            _markService.AddHp(playerIndex, addHp);
         }
     }
 }

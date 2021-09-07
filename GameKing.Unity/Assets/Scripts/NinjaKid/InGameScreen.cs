@@ -1,4 +1,5 @@
-﻿using GameKing.Shared.MessagePackObjects;
+﻿using System;
+using GameKing.Shared.MessagePackObjects;
 using GameKing.Unity.NinjaKid.Messages;
 using UniRx;
 using UnityEngine;
@@ -28,7 +29,12 @@ namespace GameKing.Unity.NinjaKid
 
         public void Awake()
         {
-            MessageBroker.Default.Receive<ActionType>().Subscribe(actionType => _curActionType = actionType);
+            MessageBroker.Default.Receive<ActionType>().Subscribe(actionType =>
+            {
+                _curActionType = actionType;
+                
+                UpdateButtonTexts(_curActionType);
+            });
         }
 
         public void SetEnableAllButton(bool enable)
@@ -43,11 +49,9 @@ namespace GameKing.Unity.NinjaKid
             {
                 case ActionType.Move:
                     moveButton.interactable = enable;
-                    moveButtonText.text = "Move";
                     break;
                 case ActionType.Attack:
                     attackButton.interactable = enable;
-                    attackButtonText.text = "Attack";
                     break;
             }
         }
@@ -55,6 +59,25 @@ namespace GameKing.Unity.NinjaKid
         public void ShowResult(GameEndType gameEndType, bool isPlayerWin)
         {
             resultPopup.Init(gameEndType, isPlayerWin);
+        }
+
+        private void UpdateButtonTexts(ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case ActionType.None:
+                    moveButtonText.text = "Move";
+                    attackButtonText.text = "Attack";
+                    break;
+                case ActionType.Move:
+                    moveButtonText.text = "Move\nSkip";
+                    break;
+                case ActionType.Attack:
+                    attackButtonText.text = "Attack\nSkip";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
+            }
         }
 
         public void OnPressedAttackButton()
@@ -66,7 +89,6 @@ namespace GameKing.Unity.NinjaKid
             {
                 case ActionType.None:
                     MessageBroker.Default.Publish(ActionType.Attack);
-                    attackButtonText.text = "Attack\nSkip";
                     break;
                 case ActionType.Attack:
                     MessageBroker.Default.Publish(new SelectCellEvent{Pos = new Vector2Int(-1, -1)});
@@ -85,7 +107,6 @@ namespace GameKing.Unity.NinjaKid
             {
                 case ActionType.None:
                     MessageBroker.Default.Publish(ActionType.Move);
-                    moveButtonText.text = "Move\nSkip";
                     break;
                 case ActionType.Move:
                     MessageBroker.Default.Publish(new SelectCellEvent{Pos = new Vector2Int(-1, -1)});

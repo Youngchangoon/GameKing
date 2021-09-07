@@ -81,7 +81,7 @@ namespace MagicOnion.Resolvers
 
         static MagicOnionResolverGetFormatterHelper()
         {
-            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(9)
+            lookup = new global::System.Collections.Generic.Dictionary<Type, int>(10)
             {
                 {typeof(global::GameKing.Shared.MessagePackObjects.MarkModel[]), 0 },
                 {typeof(global::ItemInfo[]), 1 },
@@ -89,9 +89,10 @@ namespace MagicOnion.Resolvers
                 {typeof(global::MagicOnion.DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemKind>), 3 },
                 {typeof(global::MagicOnion.DynamicArgumentTuple<int, global::ItemInfo>), 4 },
                 {typeof(global::MagicOnion.DynamicArgumentTuple<int, int, int>), 5 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.GameEndType), 6 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.GameState), 7 },
-                {typeof(global::GameKing.Shared.MessagePackObjects.ItemKind), 8 },
+                {typeof(global::MagicOnion.DynamicArgumentTuple<int, int>), 6 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.GameEndType), 7 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.GameState), 8 },
+                {typeof(global::GameKing.Shared.MessagePackObjects.ItemKind), 9 },
             };
         }
 
@@ -111,9 +112,10 @@ namespace MagicOnion.Resolvers
                 case 3: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, global::GameKing.Shared.MessagePackObjects.ItemKind>(default(int), default(global::GameKing.Shared.MessagePackObjects.ItemKind));
                 case 4: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, global::ItemInfo>(default(int), default(global::ItemInfo));
                 case 5: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, int, int>(default(int), default(int), default(int));
-                case 6: return new MagicOnion.Formatters.GameEndTypeFormatter();
-                case 7: return new MagicOnion.Formatters.GameStateFormatter();
-                case 8: return new MagicOnion.Formatters.ItemKindFormatter();
+                case 6: return new global::MagicOnion.DynamicArgumentTupleFormatter<int, int>(default(int), default(int));
+                case 7: return new MagicOnion.Formatters.GameEndTypeFormatter();
+                case 8: return new MagicOnion.Formatters.GameStateFormatter();
+                case 9: return new MagicOnion.Formatters.ItemKindFormatter();
                 default: return null;
             }
         }
@@ -376,6 +378,11 @@ namespace GameKing.Shared.Hubs {
                     var result = MessagePackSerializer.Deserialize<DynamicArgumentTuple<int, global::GameKing.Shared.MessagePackObjects.ItemKind>>(data, serializerOptions);
                     receiver.NoticeItemUsed(result.Item1, result.Item2); break;
                 }
+                case 409935946: // OnHealedPlayer
+                {
+                    var result = MessagePackSerializer.Deserialize<DynamicArgumentTuple<int, int>>(data, serializerOptions);
+                    receiver.OnHealedPlayer(result.Item1, result.Item2); break;
+                }
                 default:
                     break;
             }
@@ -421,6 +428,12 @@ namespace GameKing.Shared.Hubs {
                     ((TaskCompletionSource<Nil>)taskCompletionSource).TrySetResult(result);
                     break;
                 }
+                case 24661098: // HealPlayer
+                {
+                    var result = MessagePackSerializer.Deserialize<Nil>(data, serializerOptions);
+                    ((TaskCompletionSource<Nil>)taskCompletionSource).TrySetResult(result);
+                    break;
+                }
                 default:
                     break;
             }
@@ -454,6 +467,11 @@ namespace GameKing.Shared.Hubs {
         public global::System.Threading.Tasks.Task UseItemAsync(global::GameKing.Shared.MessagePackObjects.ItemKind itemKind)
         {
             return WriteMessageWithResponseAsync<global::GameKing.Shared.MessagePackObjects.ItemKind, Nil>(-436752771, itemKind);
+        }
+
+        public global::System.Threading.Tasks.Task HealPlayer(int playerIndex, int addHp)
+        {
+            return WriteMessageWithResponseAsync<DynamicArgumentTuple<int, int>, Nil>(24661098, new DynamicArgumentTuple<int, int>(playerIndex, addHp));
         }
 
 
@@ -509,6 +527,11 @@ namespace GameKing.Shared.Hubs {
             public global::System.Threading.Tasks.Task UseItemAsync(global::GameKing.Shared.MessagePackObjects.ItemKind itemKind)
             {
                 return __parent.WriteMessageAsync<global::GameKing.Shared.MessagePackObjects.ItemKind>(-436752771, itemKind);
+            }
+
+            public global::System.Threading.Tasks.Task HealPlayer(int playerIndex, int addHp)
+            {
+                return __parent.WriteMessageAsync<DynamicArgumentTuple<int, int>>(24661098, new DynamicArgumentTuple<int, int>(playerIndex, addHp));
             }
 
         }
